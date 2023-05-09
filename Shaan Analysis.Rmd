@@ -1,0 +1,79 @@
+```{r}
+library(rvest)
+library(stringr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(readr)
+
+library(fmsb)
+library(xlsx)
+```
+
+
+
+
+```{r}
+
+
+# specify the base link
+base_link <- "https://www.malayalachalachithram.com/listsongs.php?tot=210&md=1357&p="
+
+# create empty lists to store the song and movie names from each page
+song_list <- list()
+movie_list <- list()
+year_list <- list()
+singer_list <- list()
+
+# loop over the pages and extract the song and movie names
+for (i in 1:10) {   # change the range as per your requirement
+  # create the link for the current page
+  link <- paste0(base_link, i)
+  
+  # read the HTML content of the page
+  page <- read_html(link)
+
+  #<=========EXTRACTION========>
+  
+  #<----extract the song names from the page---->
+  song_names <- page %>% 
+    html_nodes("td:nth-child(2) a") %>% 
+    html_text()
+  
+  #<----extract the movie names from the page--->
+  movie_names <- page %>% 
+    html_nodes("td~ td+ td a") %>% 
+    html_text()
+  
+  #<-------extract the year details from page---->
+  year_names <- page %>% 
+    html_nodes("td:nth-child(4)") %>% 
+    html_text()
+  #<-----Extract singer details from page----->
+  singer_names <- page %>% 
+    html_nodes("td:nth-child(5)") %>% 
+    html_text()
+  
+  
+  #<=========EXTRACTION========>
+  
+  # add the song and movie names to the respective lists
+  song_list[[i]] <- song_names
+  movie_list[[i]] <- movie_names
+  year_list[[i]] <- year_names
+  singer_list[[i]] <- singer_names
+}
+
+#<-----combine the song and movie names from all pages into a single table---->
+all_songs <- data.frame(
+  song = unlist(song_list),
+  movie = unlist(movie_list),
+  year = unlist(year_list),
+  singer = unlist(singer_list)
+)
+
+#Converting into Excel file
+write.xlsx(all_songs,"Shaan_Rahman_Songs.xlsx",row.names = TRUE)
+
+```
+
