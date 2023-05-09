@@ -1,4 +1,4 @@
-Malayalam Movie Music Producers Data Scraping
+**Malayalam Movie Music Producers Data Scraping**
 This project is an R code that scrapes data about music directors, song names, singers, movie names, and year details of Malayalam movies from a website. The data is gathered by web scraping and is useful for researchers, music enthusiasts, and anyone interested in Malayalam cinema.
 
 Getting Started
